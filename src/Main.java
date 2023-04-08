@@ -5,7 +5,8 @@ public class Main {
         FileManager newFile = new FileManager("StockVoiture"); // instance file
         newFile.createFile(); // create file
         newFile.writeFakeData(); // write fake data in file
-        Voiture newv = new Voiture("tata", "miau", 6, "water", 5);
+
+        Voiture newv = new Voiture("test", "teste", 6, "water", 5);
         newFile.writeInFile(newv);
     }
 }

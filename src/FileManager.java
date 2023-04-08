@@ -37,33 +37,74 @@ public class FileManager {
         return file;
     }
 
+    public JSONArray readFile() {
+        JSONParser parser = new JSONParser();
+        JSONArray jsonArray = new JSONArray();
+
+        try {
+            FileReader fr = new FileReader(this.path);
+
+            Object ob = parser.parse(fr); // json parse
+            jsonArray = (JSONArray) ob;
+            System.out.println(jsonArray);
+        } catch (FileNotFoundException e) {
+            System.out.println(e.getMessage());
+        } catch (IOException e) {
+            throw new RuntimeException(e.getMessage());
+        } catch (ParseException e) {
+            throw new RuntimeException(e.getMessage());
+        }
+        return jsonArray;
+    }
+
+    // delete data in file
+    public void updateFile() {
+        try{
+            this.file = new File(this.path);
+            FileWriter fw = new FileWriter(this.file, false);
+
+            PrintWriter pw = new PrintWriter(fw, false);
+            pw.flush();
+            pw.close();
+            fw.close();
+        }catch (Exception e){
+            System.out.println( e.getMessage() );
+        }
+    }
+
     // Write fake data if file is empty
     public void writeFakeData() {
         try {
             this.file = new File(this.path);
+            FileReader fr = new FileReader(this.path);
+            System.out.println(fr.read());
 
-            // fake data
-            Voiture voiture1 = new Voiture("Peugeot", "206", 6, "diesel", 5);
-            Voiture voiture2 = new Voiture("Peugeot", "207", 2, "diesel", 2);
-            Voiture voiture3 = new Voiture("Peugeot", "208", 14, "diesel", 1);
-            Voiture voiture4 = new Voiture("Peugeot", "209", 1, "diesel", 5);
-            Voiture voiture5 = new Voiture("Peugeot", "Scenic", 7, "diesel", 3);
-            Voiture voiture6 = new Voiture("Peugeot", "Laguna", 4, "diesel", 3);
-
-            if (this.file.isFile()) {
+            if (this.file.isFile() && fr.read() < 0) {
                 FileWriter writer = new FileWriter(this.file, true);
                 this.jsonList = new JSONArray();
 
-                this.jsonList.add(voiture1.voitureToJson());
-                this.jsonList.add(voiture2.voitureToJson());
-                this.jsonList.add(voiture3.voitureToJson());
-                this.jsonList.add(voiture4.voitureToJson());
-                this.jsonList.add(voiture5.voitureToJson());
-                this.jsonList.add(voiture6.voitureToJson());
+                // fake data
+                Voiture voiture1 = new Voiture("Peugeot", "206", 6, "diesel", 5);
+                Voiture voiture2 = new Voiture("Peugeot", "207", 2, "diesel", 2);
+                Voiture voiture3 = new Voiture("Peugeot", "208", 14, "diesel", 1);
+                Voiture voiture4 = new Voiture("Peugeot", "209", 1, "diesel", 5);
+                Voiture voiture5 = new Voiture("Peugeot", "Scenic", 7, "diesel", 3);
+                Voiture voiture6 = new Voiture("Peugeot", "Laguna", 4, "diesel", 3);
 
-                System.out.println(this.jsonList.toJSONString());
-                writer.write(this.jsonList.toJSONString());
-                writer.flush();
+
+//                JSONArray rootVoiture =  this.readFile(); // contruction du tableau json
+
+                    this.jsonList.add(voiture1.voitureToJson());
+                    this.jsonList.add(voiture2.voitureToJson());
+                    this.jsonList.add(voiture3.voitureToJson());
+                    this.jsonList.add(voiture4.voitureToJson());
+                    this.jsonList.add(voiture5.voitureToJson());
+                    this.jsonList.add(voiture6.voitureToJson());
+
+                    System.out.println(this.jsonList.toJSONString());
+                    writer.write(this.jsonList.toJSONString());
+                    writer.flush();
+
             } else {
                 System.out.println("File already filled");
             }
@@ -72,48 +113,46 @@ public class FileManager {
         }
     }
 
-    public JSONArray readFile() {
-        JSONParser parser = new JSONParser();
-        JSONArray jsonArray = new JSONArray();
-
-         try {
-             FileReader fr = new FileReader(this.path);
-
-             Object ob = parser.parse(fr); // json parse
-             jsonArray = (JSONArray) ob;
-             System.out.println(jsonArray);
-         } catch (FileNotFoundException e) {
-             System.out.println(e.getMessage());
-         } catch (IOException e) {
-             throw new RuntimeException(e.getMessage());
-         } catch (ParseException e) {
-             throw new RuntimeException(e.getMessage());
-         }
-         return jsonArray;
-    }
-
-    public void updateFile() {
-
-    }
-
-    public void deleteFile() {
-
-    }
-
     // Add new Json object to file
     public void writeInFile(Voiture voiture) {
         try {
-            FileWriter fw = new FileWriter(this.path, true);
-            JSONArray rootVoiture =  this.readFile(); // contruction du tableau json
-            rootVoiture.add(voiture.voitureToJson());
-//            fw.append(voiture.voitureToJson().toJSONString());
+            this.file = new File(this.path);
+            FileReader fr = new FileReader(this.path);
+            System.out.println(fr.read());
 
-            fw.write(voiture.voitureToJson().toJSONString());
-//            fw.write(rootVoiture.toJSONString());
-            fw.flush();
+            if (this.file.isFile() && fr.read() > 0) {
+                FileWriter fw = new FileWriter(this.path, true);
+                JSONArray voitureArray = this.readFile();
+                voitureArray.add(voiture.voitureToJson());
+                System.out.println("writeInFile: " + voitureArray);
+                this.updateFile();
 
-            System.out.println("Added new voiture to the stock");
+                fw.write(voitureArray.toJSONString());
+                fw.flush();
+                System.out.println("Added new voiture to the stock array");
+            } else if (this.file.isFile() && fr.read() < 0) {
+                FileWriter fw = new FileWriter(this.path, true);
+                JSONArray voitureArray = new JSONArray();
+                voitureArray.add(voiture.voitureToJson());
+
+                fw.write(voitureArray.toJSONString());
+                fw.flush();
+                fw.close();
+                System.out.println("Added new voiture to the empty stock");
+            }
         } catch (IOException e){
+            throw new RuntimeException(e.getMessage());
+        }
+    }
+
+    // delete json file
+    public void deleteFile() {
+        try {
+            this.file = new File(this.path);
+            if (this.file.isFile()) {
+                this.file.delete();
+            }
+        } catch (Exception e) {
             throw new RuntimeException(e.getMessage());
         }
     }
