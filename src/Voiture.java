@@ -6,9 +6,9 @@ public class Voiture {
     private String model;
     private Integer age;
     private String carburation;
-    private Integer condition;
+    private String condition;
 
-    public Voiture(String brand, String model, Integer age, String carburation, Integer condition) {
+    public Voiture(String brand, String model, Integer age, String carburation, String condition) {
         this.brand = brand;
         this.model = model;
         this.age = age;
@@ -48,11 +48,11 @@ public class Voiture {
         this.carburation = carburation;
     }
 
-    public Integer getCondition() {
+    public String getCondition() {
         return condition;
     }
 
-    public void setCondition(Integer condition) {
+    public void setCondition(String condition) {
         this.condition = condition;
     }
 

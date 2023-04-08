@@ -17,7 +17,6 @@ public class FileManager {
     public FileManager(String fileName) {
         this.fileName = fileName;
         this.path = repoPath + "/" + this.fileName + ".json";
-        System.out.println(this.fileName);
 ;    }
 
     // create file with fake data - pass an object
@@ -43,10 +42,9 @@ public class FileManager {
 
         try {
             FileReader fr = new FileReader(this.path);
-
             Object ob = parser.parse(fr); // json parse
             jsonArray = (JSONArray) ob;
-            System.out.println(jsonArray);
+//            System.out.println(jsonArray);
         } catch (FileNotFoundException e) {
             System.out.println(e.getMessage());
         } catch (IOException e) {
@@ -62,8 +60,8 @@ public class FileManager {
         try{
             this.file = new File(this.path);
             FileWriter fw = new FileWriter(this.file, false);
-
             PrintWriter pw = new PrintWriter(fw, false);
+
             pw.flush();
             pw.close();
             fw.close();
@@ -77,19 +75,19 @@ public class FileManager {
         try {
             this.file = new File(this.path);
             FileReader fr = new FileReader(this.path);
-            System.out.println(fr.read());
+//            System.out.println(fr.read());
 
             if (this.file.isFile() && fr.read() < 0) {
                 FileWriter writer = new FileWriter(this.file, true);
                 this.jsonList = new JSONArray();
 
                 // fake data
-                Voiture voiture1 = new Voiture("Peugeot", "206", 6, "diesel", 5);
-                Voiture voiture2 = new Voiture("Peugeot", "207", 2, "diesel", 2);
-                Voiture voiture3 = new Voiture("Peugeot", "208", 14, "diesel", 1);
-                Voiture voiture4 = new Voiture("Peugeot", "209", 1, "diesel", 5);
-                Voiture voiture5 = new Voiture("Peugeot", "Scenic", 7, "diesel", 3);
-                Voiture voiture6 = new Voiture("Peugeot", "Laguna", 4, "diesel", 3);
+                Voiture voiture1 = new Voiture("Peugeot", "206", 6, "diesel", "Very good");
+                Voiture voiture2 = new Voiture("Peugeot", "207", 2, "diesel", "Average");
+                Voiture voiture3 = new Voiture("Peugeot", "208", 14, "diesel", "Bad");
+                Voiture voiture4 = new Voiture("Peugeot", "209", 1, "diesel", "Good");
+                Voiture voiture5 = new Voiture("Peugeot", "Scenic", 7, "diesel", "Good");
+                Voiture voiture6 = new Voiture("Peugeot", "Laguna", 4, "diesel", "Average");
 
 
 //                JSONArray rootVoiture =  this.readFile(); // contruction du tableau json
@@ -101,7 +99,7 @@ public class FileManager {
                     this.jsonList.add(voiture5.voitureToJson());
                     this.jsonList.add(voiture6.voitureToJson());
 
-                    System.out.println(this.jsonList.toJSONString());
+//                    System.out.println(this.jsonList.toJSONString());
                     writer.write(this.jsonList.toJSONString());
                     writer.flush();
 
@@ -118,13 +116,13 @@ public class FileManager {
         try {
             this.file = new File(this.path);
             FileReader fr = new FileReader(this.path);
-            System.out.println(fr.read());
+//            System.out.println(fr.read());
 
             if (this.file.isFile() && fr.read() > 0) {
                 FileWriter fw = new FileWriter(this.path, true);
                 JSONArray voitureArray = this.readFile();
                 voitureArray.add(voiture.voitureToJson());
-                System.out.println("writeInFile: " + voitureArray);
+//                System.out.println("writeInFile: " + voitureArray);
                 this.updateFile();
 
                 fw.write(voitureArray.toJSONString());
