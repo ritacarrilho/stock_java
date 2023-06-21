@@ -4,7 +4,6 @@ import java.io.*;
 import java.nio.file.FileSystems;
 import java.nio.file.Path;
 import org.json.simple.JSONArray;
-import org.json.simple.JSONObject;
 import org.json.simple.parser.JSONParser;
 import org.json.simple.parser.ParseException;
 
@@ -81,12 +80,12 @@ public class FileManager {
                 this.jsonList = new JSONArray();
 
                 // fake data
-                Voiture voiture1 = new Voiture("Peugeot", "206", 6, "diesel", "Very good");
-                Voiture voiture2 = new Voiture("Peugeot", "207", 2, "diesel", "Average");
-                Voiture voiture3 = new Voiture("Peugeot", "208", 14, "diesel", "Bad");
-                Voiture voiture4 = new Voiture("Peugeot", "209", 1, "diesel", "Good");
-                Voiture voiture5 = new Voiture("Peugeot", "Scenic", 7, "diesel", "Good");
-                Voiture voiture6 = new Voiture("Peugeot", "Laguna", 4, "diesel", "Average");
+                Voiture voiture1 = new Voiture(1, "Peugeot", "206", 6, "diesel", "Very good");
+                Voiture voiture2 = new Voiture(2,"Peugeot", "207", 2, "diesel", "Average");
+                Voiture voiture3 = new Voiture(3, "Peugeot", "208", 14, "diesel", "Bad");
+                Voiture voiture4 = new Voiture(4, "Peugeot", "209", 1, "diesel", "Good");
+                Voiture voiture5 = new Voiture(5, "Peugeot", "Scenic", 7, "diesel", "Good");
+                Voiture voiture6 = new Voiture(6, "Peugeot", "Laguna", 4, "diesel", "Average");
 
 //                JSONArray rootVoiture =  this.readFile(); // contruction du tableau json
                     this.jsonList.add(voiture1.voitureToJson());
@@ -138,6 +137,17 @@ public class FileManager {
         }
     }
 
+    public void deleteFileData() {
+        try {
+            this.file = new File(this.path);
+            if (this.file.isFile()) {
+                this.file.delete();
+            }
+        } catch (Exception e) {
+            throw new RuntimeException(e.getMessage());
+        }
+    }
+
     // Delete json file
     public void deleteFile() {
         try {
@@ -148,5 +158,24 @@ public class FileManager {
         } catch (Exception e) {
             throw new RuntimeException(e.getMessage());
         }
+    }
+
+    public Integer getLenght() {
+        JSONParser parser = new JSONParser();
+        JSONArray jsonArray = new JSONArray();
+
+        try {
+            FileReader fr = new FileReader(this.path);
+            Object ob = parser.parse(fr);
+            jsonArray = (JSONArray) ob;
+        } catch (FileNotFoundException e) {
+            System.out.println(e.getMessage());
+        } catch (IOException e) {
+            throw new RuntimeException(e.getMessage());
+        } catch (ParseException e) {
+            throw new RuntimeException(e.getMessage());
+        }
+
+        return jsonArray.size();
     }
 }
