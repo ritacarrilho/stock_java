@@ -1,5 +1,5 @@
-# StockVoitures
-Used car stock software for adding, deleting and modifying car data (CRUD).
+# Car Stock Software
+Used car stock desktop software for adding, deleting and modifying car data (CRUD).
 
 ## Features:
 - Exploitation of data through a file in JSON format.
